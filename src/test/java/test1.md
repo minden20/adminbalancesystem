@@ -1,3 +1,4 @@
+```Java
 package com.minden;
 
 import com.minden.entity.ConnectionPool;
@@ -92,3 +93,20 @@ public class Main {
         }
     }
 }
+```
+[1/5] Тестуємо таблицю PLAYER...
+✅ PLAYER збережено! ID: 1
+
+[2/5] Тестуємо таблицю TREASURE...
+✅ TREASURE збережено! ID: 1
+
+[3/5] Тестуємо таблицю EVENT...
+✅ EVENT збережено! ID: 1
+
+[4/5] Тестуємо таблицю ACTION_LOG (Foreign Key: Player ID)...
+✅ ACTION_LOG успішно збережено та прив'язано до Гравця 1
+
+[5/5] Тестуємо таблицю PLAYER_EVENT_HISTORY (Багато-до-Багатьох)...
+✅ PLAYER_EVENT_HISTORY успішно збережено! Гравець 1 зустрів Подію 1
+
+🎉 УСІ 5 ТАБЛИЦЬ УСПІШНО ПРОТЕСТОВАНО! ІНФРАСТРУКТУРА ПРАЦЮЄ ІДЕАЛЬНО.

@@ -3,7 +3,7 @@
    Класифікація: Майстер-дані (основна сутність гравця)
 */
 CREATE TABLE PLAYER (
-    ID INT PRIMARY KEY,
+    ID INT AUTO_INCREMENT PRIMARY KEY,
     USERNAME VARCHAR(255) UNIQUE NOT NULL,
     EMAIL VARCHAR(255) UNIQUE NOT NULL,
     PASSWORD_HASH VARCHAR(255) NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE MAP_TILE (
    Класифікація: Майстер-дані (ігрові об'єкти)
 */
 CREATE TABLE TREASURE (
-    ID INT PRIMARY KEY,
+    ID INT AUTO_INCREMENT PRIMARY KEY,
     X INT,
     Y INT,
     MIN_GOLD INT,
@@ -43,7 +43,7 @@ CREATE TABLE TREASURE (
    Класифікація: Транзакційна таблиця (лог дій для античиту)
 */
 CREATE TABLE ACTION_LOG (
-    ID INT PRIMARY KEY,
+    ID INT AUTO_INCREMENT PRIMARY KEY,
     PLAYER_ID INT,
     ACTION_TYPE VARCHAR(255),
     FROM_X INT,
@@ -60,7 +60,7 @@ CREATE TABLE ACTION_LOG (
    Класифікація: Довідник (список можливих подій)
 */
 CREATE TABLE EVENT (
-    ID INT PRIMARY KEY,
+    ID INT AUTO_INCREMENT PRIMARY KEY,
     NAME VARCHAR(255),
     DESCRIPTION TEXT,
     MIN_GOLD_PENALTY INT,
@@ -72,7 +72,7 @@ CREATE TABLE EVENT (
    Класифікація: Транзакційна таблиця (зв'язок Багато-до-Багатьох)
 */
 CREATE TABLE PLAYER_EVENT_HISTORY (
-    ID INT PRIMARY KEY,
+    ID INT AUTO_INCREMENT PRIMARY KEY,
     PLAYER_ID INT,
     EVENT_ID INT,
     OCCURRED_DAY INT,
