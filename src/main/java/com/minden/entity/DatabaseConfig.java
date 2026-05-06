@@ -8,7 +8,6 @@ public class DatabaseConfig {
 
     public static DataSource createDataSource() {
         JdbcDataSource ds = new JdbcDataSource();
-        // Важливо: вказуйте назву файлу бази, наприклад ./data/game_db
         ds.setURL("jdbc:h2:./data/game_db;DB_CLOSE_DELAY=-1");
         ds.setUser("sa");
         ds.setPassword("");
@@ -19,7 +18,6 @@ public class DatabaseConfig {
         Flyway flyway = Flyway.configure()
             .dataSource(dataSource)
             .locations("classpath:db/migration")
-            // Якщо ви запускаєте вперше і Flyway бачить файли V1, V2
             .load();
 
         var result = flyway.migrate();
