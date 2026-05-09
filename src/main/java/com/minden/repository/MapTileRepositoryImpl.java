@@ -81,4 +81,48 @@ private final ConnectionPool connectionPool;
             e.printStackTrace();
         }
     }
+
+    @Override
+    public boolean hasTiles() {
+        String sql = "SELECT COUNT(*) FROM map_tile";
+        try (var conn = connectionPool.getConnection();
+             var stmt = conn.createStatement();
+             var rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public void batchInsert(List<MapTile> tiles) {
+        String sql = "INSERT INTO map_tile (x, y, terrain_type) VALUES (?, ?, ?)";
+        try (var conn = connectionPool.getConnection()) {
+            conn.setAutoCommit(false);
+            try (var pstmt = conn.prepareStatement(sql)) {
+                for (int i = 0; i < tiles.size(); i++) {
+                    MapTile tile = tiles.get(i);
+                    pstmt.setInt(1, tile.getX());
+                    pstmt.setInt(2, tile.getY());
+                    pstmt.setString(3, tile.getTerrainType());
+                    pstmt.addBatch();
+
+                    if (i % 1000 == 0 || i == tiles.size() - 1) {
+                        pstmt.executeBatch();
+                    }
+                }
+                conn.commit();
+            } catch (Exception e) {
+                conn.rollback();
+                throw e;
+            } finally {
+                conn.setAutoCommit(true);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Помилка збереження карти в БД", e);
+        }
+    }
 }

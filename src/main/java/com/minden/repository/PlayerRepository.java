@@ -9,7 +9,13 @@ import com.minden.entity.PlayerEventHistory;
 public interface PlayerRepository {
     Optional<Player> findById(Integer id);
 
+    Optional<Player> findByUsername(String username);
+
+    Optional<Player> findByEmail(String email);
+
     void save(Player player);
+
+    List<Player> findAll();
 
     void update(Player player);
 

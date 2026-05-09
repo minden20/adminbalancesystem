@@ -13,4 +13,7 @@ public interface MapTileRepository {
     List<MapTile> findAll();
 
     void delete(Integer x, Integer y);
+    
+    boolean hasTiles();
+    void batchInsert(List<MapTile> tiles);
 }

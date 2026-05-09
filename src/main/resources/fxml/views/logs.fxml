@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="15.0" styleClass="content-area" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.minden.ui.controller.LogsController">
+    <HBox alignment="CENTER_LEFT" spacing="10.0">
+        <Label text="Логи дій гравців" styleClass="section-title"/>
+        <Region HBox.hgrow="ALWAYS" />
+        <Button text="Оновити лог" onAction="#handleRefresh" styleClass="action-button"/>
+    </HBox>
+
+    <TableView fx:id="logsTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+        <columns>
+            <TableColumn fx:id="idColumn" text="ID" prefWidth="50" />
+            <TableColumn fx:id="playerIdColumn" text="ID Гравця" prefWidth="80" />
+            <TableColumn fx:id="actionTypeColumn" text="Тип дії" prefWidth="120" />
+            <TableColumn fx:id="fromXColumn" text="Звідки X" prefWidth="70" />
+            <TableColumn fx:id="fromYColumn" text="Звідки Y" prefWidth="70" />
+            <TableColumn fx:id="toXColumn" text="Куди X" prefWidth="70" />
+            <TableColumn fx:id="toYColumn" text="Куди Y" prefWidth="70" />
+            <TableColumn fx:id="isValidColumn" text="Валідно" prefWidth="80" />
+            <TableColumn fx:id="createdAtColumn" text="Час дії" prefWidth="160" />
+        </columns>
+    </TableView>
+</VBox>

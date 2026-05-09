@@ -1,5 +1,7 @@
 package com.minden.repository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,18 +25,39 @@ public class PlayerRepositoryImpl implements PlayerRepository {
             stmt.setInt(1, id);
             var rs = stmt.executeQuery();
             if (rs.next()) {
-                Player player = Player.builder()
-                        .id(rs.getObject("id", Integer.class))
-                        .username(rs.getString("username"))
-                        .email(rs.getString("email"))
-                        .passwordHash(rs.getString("password_hash"))
-                        .x(rs.getObject("x", Integer.class))
-                        .y(rs.getObject("y", Integer.class))
-                        .gold(rs.getObject("gold", Integer.class))
-                        .energy(rs.getObject("energy", Integer.class))
-                        .currentDay(rs.getObject("current_day", Integer.class))
-                        .build();
-                return Optional.of(player);
+                return Optional.of(mapRowToPlayer(rs));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Player> findByUsername(String username) {
+        String sql = "SELECT * FROM player WHERE username = ?";
+        try (var connection = connectionPool.getConnection();
+                var stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, username);
+            var rs = stmt.executeQuery();
+            if (rs.next()) {
+                return Optional.of(mapRowToPlayer(rs));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Player> findByEmail(String email) {
+        String sql = "SELECT * FROM player WHERE email = ?";
+        try (var connection = connectionPool.getConnection();
+                var stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, email);
+            var rs = stmt.executeQuery();
+            if (rs.next()) {
+                return Optional.of(mapRowToPlayer(rs));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -87,6 +110,22 @@ public class PlayerRepositoryImpl implements PlayerRepository {
     }
 
     @Override
+    public List<Player> findAll() {
+        List<Player> players = new ArrayList<>();
+        String sql = "SELECT * FROM player";
+        try (var connection = connectionPool.getConnection();
+                var stmt = connection.prepareStatement(sql)) {
+            var rs = stmt.executeQuery();
+            while (rs.next()) {
+                players.add(mapRowToPlayer(rs));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return players;
+    }
+
+    @Override
     public void delete(Integer id) {
         String sql = "DELETE FROM player WHERE id = ?";
         try (var connection = connectionPool.getConnection();
@@ -133,5 +172,19 @@ public class PlayerRepositoryImpl implements PlayerRepository {
             e.printStackTrace();
         }
         return history;
+    }
+
+    private Player mapRowToPlayer(ResultSet rs) throws SQLException {
+        return Player.builder()
+                .id(rs.getObject("id", Integer.class))
+                .username(rs.getString("username"))
+                .email(rs.getString("email"))
+                .passwordHash(rs.getString("password_hash"))
+                .x(rs.getObject("x", Integer.class))
+                .y(rs.getObject("y", Integer.class))
+                .gold(rs.getObject("gold", Integer.class))
+                .energy(rs.getObject("energy", Integer.class))
+                .currentDay(rs.getObject("current_day", Integer.class))
+                .build();
     }
 }

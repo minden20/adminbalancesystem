@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox spacing="15.0" styleClass="content-area" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.minden.ui.controller.TreasureController">
+    <!-- Ліва частина: Таблиця -->
+    <VBox spacing="15.0" HBox.hgrow="ALWAYS">
+        <HBox alignment="CENTER_LEFT" spacing="10.0">
+            <Label text="Управління скарбами" styleClass="section-title"/>
+            <Region HBox.hgrow="ALWAYS" />
+            <Button text="Додати скарб" onAction="#handleAdd" styleClass="primary-button"/>
+            <Button text="Оновити" onAction="#handleRefresh" styleClass="action-button"/>
+        </HBox>
+
+        <TableView fx:id="treasuresTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+            <columns>
+                <TableColumn fx:id="idColumn" text="ID" prefWidth="40" />
+                <TableColumn fx:id="xColumn" text="X" prefWidth="60" />
+                <TableColumn fx:id="yColumn" text="Y" prefWidth="60" />
+                <TableColumn fx:id="minGoldColumn" text="Мін. золото" prefWidth="120" />
+                <TableColumn fx:id="maxGoldColumn" text="Макс. золото" prefWidth="120" />
+                <TableColumn fx:id="isCollectedColumn" text="Зібрано" prefWidth="80" />
+            </columns>
+        </TableView>
+    </VBox>
+
+    <!-- Права частина: Панель редагування -->
+    <VBox fx:id="editPanel" spacing="10.0" prefWidth="300" styleClass="login-box" visible="false">
+        <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+        </padding>
+        <Label fx:id="editTitleLabel" text="Редагування скарбу" styleClass="section-title"/>
+
+        <HBox spacing="10.0">
+            <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                <Label text="Координата X"/>
+                <TextField fx:id="xField" styleClass="input-field"/>
+            </VBox>
+            <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                <Label text="Координата Y"/>
+                <TextField fx:id="yField" styleClass="input-field"/>
+            </VBox>
+        </HBox>
+
+        <HBox spacing="10.0">
+            <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                <Label text="Мінімальне золото"/>
+                <TextField fx:id="minGoldField" styleClass="input-field"/>
+            </VBox>
+            <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                <Label text="Максимальне золото"/>
+                <TextField fx:id="maxGoldField" styleClass="input-field"/>
+            </VBox>
+        </HBox>
+
+        <VBox spacing="5.0">
+            <CheckBox fx:id="isCollectedCheckBox" text="Зібрано гравцем" styleClass="checkbox"/>
+        </VBox>
+
+        <Region VBox.vgrow="ALWAYS" />
+
+        <Button text="Зберегти зміни" onAction="#handleSave" styleClass="primary-button" maxWidth="Infinity"/>
+        <Button text="Видалити скарб" onAction="#handleDelete" styleClass="logout-button" maxWidth="Infinity"/>
+    </VBox>
+</HBox>

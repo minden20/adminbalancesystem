@@ -8,4 +8,6 @@ public interface ActionLogRepository {
     void save(ActionLog log);
 
     List<ActionLog> findByPlayerId(Integer playerId);
+
+    List<ActionLog> findAll();
 }

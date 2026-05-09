@@ -64,6 +64,25 @@ public class ActionLogRepositoryImpl implements ActionLogRepository {
         return logs;
     }
 
+    @Override
+    public List<ActionLog> findAll() {
+        List<ActionLog> logs = new ArrayList<>();
+        String sql = "SELECT * FROM action_log ORDER BY created_at DESC";
+
+        try (var connection = connectionPool.getConnection();
+                var stmt = connection.prepareStatement(sql)) {
+
+            var rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                logs.add(mapRowToActionLog(rs));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return logs;
+    }
+
     private ActionLog mapRowToActionLog(ResultSet rs) throws SQLException {
         return ActionLog.builder()
                 .id(rs.getInt("id"))
