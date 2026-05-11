@@ -37,6 +37,12 @@ public class PlayersController {
     @FXML private TextField xField;
     @FXML private TextField yField;
     @FXML private TextField searchField;
+    
+    // Фільтри
+    @FXML private TextField minGoldFilter;
+    @FXML private TextField maxGoldFilter;
+    @FXML private TextField minEnergyFilter;
+    @FXML private TextField maxEnergyFilter;
 
     private PlayerService playerService;
     private ObservableList<PlayerDto> playersData = FXCollections.observableArrayList();
@@ -63,21 +69,11 @@ public class PlayersController {
 
             // Налаштування фільтрації/пошуку
             filteredData = new FilteredList<>(playersData, p -> true);
-            searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-                filteredData.setPredicate(player -> {
-                    if (newValue == null || newValue.trim().isEmpty()) {
-                        return true;
-                    }
-                    String lowerCaseFilter = newValue.toLowerCase();
-                    if (player.getUsername() != null && player.getUsername().toLowerCase().contains(lowerCaseFilter)) {
-                        return true;
-                    }
-                    if (player.getEmail() != null && player.getEmail().toLowerCase().contains(lowerCaseFilter)) {
-                        return true;
-                    }
-                    return false;
-                });
-            });
+            searchField.textProperty().addListener((observable, oldValue, newValue) -> updatePredicate());
+            minGoldFilter.textProperty().addListener((observable, oldValue, newValue) -> updatePredicate());
+            maxGoldFilter.textProperty().addListener((observable, oldValue, newValue) -> updatePredicate());
+            minEnergyFilter.textProperty().addListener((observable, oldValue, newValue) -> updatePredicate());
+            maxEnergyFilter.textProperty().addListener((observable, oldValue, newValue) -> updatePredicate());
             playersTable.setItems(filteredData);
 
             editPanel.setVisible(false);
@@ -97,6 +93,56 @@ public class PlayersController {
         loadData();
         editPanel.setVisible(false);
         selectedPlayer = null;
+    }
+
+    private void updatePredicate() {
+        filteredData.setPredicate(player -> {
+            // Фільтр за текстом (ім'я/email)
+            String searchText = searchField.getText();
+            if (searchText != null && !searchText.trim().isEmpty()) {
+                String lowerCaseFilter = searchText.toLowerCase();
+                boolean matchesUsername = player.getUsername() != null && player.getUsername().toLowerCase().contains(lowerCaseFilter);
+                boolean matchesEmail = player.getEmail() != null && player.getEmail().toLowerCase().contains(lowerCaseFilter);
+                if (!matchesUsername && !matchesEmail) {
+                    return false;
+                }
+            }
+
+            // Фільтр по золоту
+            try {
+                if (minGoldFilter.getText() != null && !minGoldFilter.getText().trim().isEmpty()) {
+                    int minGold = Integer.parseInt(minGoldFilter.getText().trim());
+                    if (player.getGold() == null || player.getGold() < minGold) return false;
+                }
+                if (maxGoldFilter.getText() != null && !maxGoldFilter.getText().trim().isEmpty()) {
+                    int maxGold = Integer.parseInt(maxGoldFilter.getText().trim());
+                    if (player.getGold() == null || player.getGold() > maxGold) return false;
+                }
+            } catch (NumberFormatException ignored) {}
+
+            // Фільтр по енергії
+            try {
+                if (minEnergyFilter.getText() != null && !minEnergyFilter.getText().trim().isEmpty()) {
+                    int minEnergy = Integer.parseInt(minEnergyFilter.getText().trim());
+                    if (player.getEnergy() == null || player.getEnergy() < minEnergy) return false;
+                }
+                if (maxEnergyFilter.getText() != null && !maxEnergyFilter.getText().trim().isEmpty()) {
+                    int maxEnergy = Integer.parseInt(maxEnergyFilter.getText().trim());
+                    if (player.getEnergy() == null || player.getEnergy() > maxEnergy) return false;
+                }
+            } catch (NumberFormatException ignored) {}
+
+            return true;
+        });
+    }
+
+    @FXML
+    private void handleClearFilters(ActionEvent event) {
+        searchField.clear();
+        minGoldFilter.clear();
+        maxGoldFilter.clear();
+        minEnergyFilter.clear();
+        maxEnergyFilter.clear();
     }
 
     private void showPlayerDetails(PlayerDto player) {
