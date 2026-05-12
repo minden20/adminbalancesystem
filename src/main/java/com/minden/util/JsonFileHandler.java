@@ -15,7 +15,19 @@ public class JsonFileHandler {
      */
     public String readFile(String filePath) throws IOException {
         try {
-            return new String(Files.readAllBytes(Paths.get(filePath)), StandardCharsets.UTF_8);
+            if (Files.exists(Paths.get(filePath))) {
+                return new String(Files.readAllBytes(Paths.get(filePath)), StandardCharsets.UTF_8);
+            }
+            
+            // Fallback to reading from the classpath (useful when bundled in JAR)
+            String resourcePath = filePath.startsWith("/") ? filePath : "/" + filePath;
+            try (InputStream is = getClass().getResourceAsStream(resourcePath)) {
+                if (is != null) {
+                    return new String(is.readAllBytes(), StandardCharsets.UTF_8);
+                }
+            }
+            
+            throw new FileNotFoundException("Файл не знайдено ні локально, ні в ресурсах: " + filePath);
         } catch (IOException e) {
             throw new IOException("Помилка читання файлу: " + filePath, e);
         }
@@ -51,7 +63,12 @@ public class JsonFileHandler {
      * @return true, якщо файл існує, false - інакше
      */
     public boolean fileExists(String filePath) {
-        return Files.exists(Paths.get(filePath));
+        if (Files.exists(Paths.get(filePath))) {
+            return true;
+        }
+        // Also check classpath
+        String resourcePath = filePath.startsWith("/") ? filePath : "/" + filePath;
+        return getClass().getResource(resourcePath) != null;
     }
 }
 
