@@ -54,7 +54,6 @@ jobs:
             --vendor "Minden" `
             --input jpackage-input/ `
             --main-jar rpgadminmenu-1.0-SNAPSHOT.jar `
-            --main-jar rpgadminmenu-1.0-SNAPSHOT.jar `
             --icon packaging/icon.ico `
             --dest dist/ `
             --win-dir-chooser `
@@ -70,7 +69,6 @@ jobs:
             --app-version "${{ steps.version.outputs.VERSION }}" \
             --vendor "Minden" \
             --input jpackage-input/ \
-            --main-jar rpgadminmenu-1.0-SNAPSHOT.jar \
             --main-jar rpgadminmenu-1.0-SNAPSHOT.jar \
             --dest dist/ \
             --linux-shortcut
